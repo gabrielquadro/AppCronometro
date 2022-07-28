@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { StyleSheet, Text, View , Image, TouchableOpacity} from 'react-native';
+import { StyleSheet, Text, View , Image, TouchableOpacity,FlatList } from 'react-native';
 
 let timer = null;
 let ss = 0;
@@ -10,6 +10,7 @@ export default function App() {
   const [numero,setNumero] = useState(0);
   const [botao,setBotao] = useState('LIGAR');
   const [ultimo,setUltimo] = useState(null);
+  const [lista, setLista] = useState([]);
 
   function ligar(){
     if(timer != null){
@@ -45,6 +46,7 @@ export default function App() {
 
     }
     setUltimo(numero)
+    setLista((arr) => [...arr, {id: new Date().getTime(), tempo: numero}])
     setNumero(0);
     ss = 0;
     mm = 0;
@@ -76,9 +78,27 @@ export default function App() {
 
       <View style={styles.areaHistorico}>
         <Text style={styles.textoHistorico}>
-          {ultimo ? 'Ultimo tempo ' + ultimo : ''}
+          Histórico
         </Text>
       </View>
+
+      
+      <FlatList
+        style={styles.lista}
+        data={lista.reverse()}
+        contentContainerStyle={{alignItems:"center"}}
+        renderItem={({item}) =>{
+          return(
+            <Text style={styles.textoLista}>
+              Resultado = {item.tempo}
+            </Text>
+          )
+        }}
+        
+        >
+
+      </FlatList>
+      
     </View>
   );
 }
@@ -94,7 +114,8 @@ const styles = StyleSheet.create({
   titulo: {
     color: 'white',
     fontSize: 30,
-    marginBottom: 50
+    marginBottom: 50,
+    marginTop: 50
   },
   img: {
     width: 300,
@@ -130,6 +151,14 @@ const styles = StyleSheet.create({
   },
   textoHistorico:{
     color: '#FFF',
+    fontSize: 30
+  },
+  lista: {
+    width: '100%',
+    marginTop: 10
+  },
+  textoLista:{
+    color: '#FFF',
     fontSize: 20
-  }
+  },
 });
